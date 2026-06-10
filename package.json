@@ -1,0 +1,14 @@
+{
+  "name": "revision-helper",
+  "version": "1.0.0",
+  "description": "Static revision helper website for students.",
+  "main": "index.js",
+  "scripts": {
+    "start": "npx serve .",
+    "preview": "npx serve .",
+    "deploy": "echo 'Use GitHub Pages, Netlify, or a custom host to deploy this static site.'"
+  },
+  "keywords": ["revision", "study", "flashcards", "education"],
+  "author": "",
+  "license": "MIT"
+}

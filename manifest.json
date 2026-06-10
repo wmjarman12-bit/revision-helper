@@ -1,0 +1,15 @@
+{
+  "name": "Revision Helper",
+  "short_name": "RevisionHelper",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#eef2ff",
+  "theme_color": "#4338ca",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

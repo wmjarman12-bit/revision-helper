@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Revision Helper | Study Website</title>
+  <meta name="description" content="Revision Helper is a browser-based study website for Computer Science, Science, English, and Maths." />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#4338ca" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="auth-screen" class="auth-screen hidden">
+    <div class="auth-card">
+      <h2>Revision Helper</h2>
+      <p class="auth-intro">Create an account or sign in to save progress and unlock admin tools.</p>
+      <div class="auth-tabs">
+        <button id="switch-to-login" class="auth-tab active">Login</button>
+        <button id="switch-to-signup" class="auth-tab">Sign Up</button>
+      </div>
+      <form id="login-form" class="auth-form">
+        <label>Username<input type="text" id="login-username" required /></label>
+        <label>Password<input type="password" id="login-password" required /></label>
+        <button type="submit">Login</button>
+        <div class="admin-unlock-row">
+          <button type="button" id="show-admin-unlock" class="link-button">Have an admin code? Unlock here</button>
+        </div>
+        <div id="login-admin-unlock-section" class="hidden">
+          <label>Admin code<input type="password" id="login-admin-code" placeholder="Enter admin code" /></label>
+          <button type="button" id="login-admin-unlock-btn" class="secondary-btn">Login & unlock admin</button>
+          <p id="login-admin-feedback" class="auth-feedback"></p>
+        </div>
+        <p id="login-feedback" class="auth-feedback"></p>
+      </form>
+      <form id="signup-form" class="auth-form hidden">
+        <label>Username<input type="text" id="signup-username" required /></label>
+        <label>Password<input type="password" id="signup-password" required /></label>
+        <button type="submit">Create Account</button>
+        <p id="signup-feedback" class="auth-feedback"></p>
+      </form>
+    </div>
+  </div>
+
+  <div class="page-shell">
+    <header class="site-header">
+      <div class="brand-bar">
+        <div>
+          <p class="eyebrow">Revision Helper</p>
+          <h1>Welcome to your personalised study space</h1>
+        </div>
+        <div class="badge">v3.0</div>
+      </div>
+      <div class="drawer-toggle">
+        <button id="drawer-open-btn" class="menu-toggle" aria-label="Open menu">☰ Menu</button>
+      </div>
+    </header>
+
+    <main class="site-main">
+      <div id="drawer-overlay" class="drawer-overlay hidden"></div>
+      <aside id="side-drawer" class="side-drawer hidden" aria-label="Navigation drawer">
+        <button id="drawer-close-btn" class="drawer-close" aria-label="Close menu">×</button>
+        <div class="drawer-menu">
+            <button class="menu-item drawer-item active" data-page="home">Home</button>
+          <button class="menu-item drawer-item" data-page="subjects">Subjects</button>
+          <button class="menu-item drawer-item" data-page="options">Study</button>
+          <button class="menu-item drawer-item" data-page="admin">Admin</button>
+          <button class="menu-item drawer-item" id="drawer-signout-btn">Sign out</button>
+        </div>
+      </aside>
+
+      <div class="container">
+      <aside class="sidebar">
+        <div id="dashboard-panel" class="panel user-panel">
+          <h2>Welcome back</h2>
+          <p class="welcome-copy">Jump into your next study session, track progress, and keep a calm revision flow.</p>
+          <div class="user-profile">
+            <p>Signed in as <strong id="user-name">Guest</strong></p>
+            <p id="user-role">Student</p>
+          </div>
+          <div class="welcome-actions">
+            <button class="secondary-btn" id="quick-start-subjects">Go to Subjects</button>
+            <button class="secondary-btn" id="quick-start-options">Open Study Tools</button>
+          </div>
+          <div class="metric-grid">
+            <div class="metric-item">
+              <span>Total learned</span>
+              <strong id="dashboard-learned">0</strong>
+            </div>
+            <div class="metric-item">
+              <span>Accuracy</span>
+              <strong id="dashboard-accuracy">0%</strong>
+            </div>
+            <div class="metric-item">
+              <span>Streak</span>
+              <strong id="dashboard-streak">0 days</strong>
+            </div>
+          </div>
+          <div class="account-actions">
+            <button id="logout-btn" class="secondary-btn">Logout</button>
+          </div>
+        </div>
+
+        <div id="subject-panel" class="panel subject-panel">
+          <h2>Subjects</h2>
+          <div class="subject-select">
+            <button class="subject-btn active" data-subject="computer-science">Computer Science</button>
+            <button class="subject-btn" data-subject="science">Science</button>
+            <button class="subject-btn" data-subject="english">English</button>
+            <button class="subject-btn" data-subject="maths">Maths</button>
+          </div>
+          <div class="level-select">
+            <button class="level-btn active" data-level="ks3">KS3</button>
+            <button class="level-btn" data-level="ks4">KS4</button>
+            <button class="level-btn" data-level="gcse">GCSE</button>
+            <button class="level-btn" data-level="alevel">A-Level</button>
+          </div>
+          <div class="mode-select">
+            <button class="mode-btn active" data-mode="flashcards">Flashcards</button>
+            <button class="mode-btn" data-mode="questions">Questions</button>
+          </div>
+          <div class="subject-tools">
+            <label class="search-field">
+              <input id="search-cards" type="search" placeholder="Search flashcards & questions" />
+            </label>
+          </div>
+        </div>
+
+        <div id="revision-panel" class="panel revision-panel">
+          <h2>Revision options</h2>
+          <div class="option-row">
+            <label class="toggle-switch">
+              Auto advance
+              <input id="auto-advance" type="checkbox" />
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="option-row">
+            <label class="toggle-switch">
+              Show hints
+              <input id="show-hints" type="checkbox" />
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="option-row">
+            <label class="toggle-switch">
+              Dark mode
+              <input id="theme-toggle" type="checkbox" />
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="option-row timer-card">
+            <div>
+              <span class="timer-label">Study timer</span>
+              <div id="timer-display" class="timer-display">00:00</div>
+            </div>
+            <div class="timer-actions">
+              <button id="start-timer">Start</button>
+              <button id="pause-timer">Pause</button>
+              <button id="reset-timer">Reset</button>
+            </div>
+          </div>
+          <div class="option-row">
+            <label class="toggle-switch">
+              Quick bookmark count
+              <span id="bookmark-count">0 saved</span>
+            </label>
+          </div>
+          <div class="option-row">
+            <label for="study-focus">Study focus</label>
+            <select id="study-focus">
+              <option value="review">Review first</option>
+              <option value="practice">Practice mode</option>
+              <option value="exam">Exam challenge</option>
+            </select>
+          </div>
+          <div class="option-row button-row">
+            <button id="reset-progress">Reset progress</button>
+            <button id="shuffle-global">Shuffle deck</button>
+          </div>
+        </div>
+
+        <div id="progress-panel" class="panel progress-panel">
+          <h2>Progress</h2>
+          <div class="summary-detail">
+            <span>Current subject</span>
+            <p id="summary-subject">Computer Science</p>
+          </div>
+          <div class="summary-detail">
+            <span>Current level</span>
+            <p id="summary-level">KS3</p>
+          </div>
+          <div class="summary-detail">
+            <span>Cards learned</span>
+            <p id="summary-learned">0 / 100</p>
+          </div>
+          <div class="summary-detail">
+            <span>Questions correct</span>
+            <p id="summary-correct">0 / 0</p>
+          </div>
+          <div id="progress-bars" class="progress-bars"></div>
+        </div>
+
+        <div id="achievements-panel" class="panel achievement-panel">
+          <h2>Achievements</h2>
+          <div id="achievement-grid" class="achievement-grid"></div>
+        </div>
+
+        <div id="admin-panel" class="panel admin-panel hidden">
+          <h2>Admin control</h2>
+          <p id="admin-status">Enter the unlock code to manage flashcards and view user progress.</p>
+          <div id="admin-lock-group" class="admin-lock-group">
+            <div id="admin-unlock-row" class="admin-unlock-row">
+              <input id="admin-code" type="password" placeholder="Admin unlock code" />
+              <button id="unlock-admin">Unlock</button>
+            </div>
+            <button id="admin-lock-panel" class="secondary-btn hidden">Lock panel</button>
+          </div>
+          <div id="admin-actions" class="admin-actions hidden">
+            <div class="admin-summary-row">
+              <div class="admin-summary-item">
+                <strong>Accounts</strong>
+                <span id="admin-account-count">0</span>
+              </div>
+              <div class="admin-summary-item">
+                <strong>Admins</strong>
+                <span id="admin-count">0</span>
+              </div>
+              <div class="admin-summary-item">
+                <strong>Locked</strong>
+                <span id="locked-count">0</span>
+              </div>
+            </div>
+            <div class="admin-filter-row">
+              <input id="admin-user-search" type="search" placeholder="Search users, status, or role" />
+              <button id="admin-export-data" class="secondary-btn">Export user data</button>
+            </div>
+            <h3>Add flashcard</h3>
+            <div class="option-row">
+              <select id="admin-subject-select">
+                <option value="computer-science">Computer Science</option>
+                <option value="science">Science</option>
+                <option value="english">English</option>
+                <option value="maths">Maths</option>
+              </select>
+              <input id="admin-prompt" type="text" placeholder="Flashcard prompt" />
+              <input id="admin-answer" type="text" placeholder="Answer text" />
+              <button id="save-card">Save card</button>
+            </div>
+            <p id="admin-add-feedback" class="auth-feedback"></p>
+            <h3>All accounts</h3>
+            <div id="admin-users-table" class="admin-users-table"></div>
+            <button id="admin-reset-all" class="secondary-btn">Reset all user progress</button>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main-panel">
+        <section id="home-panel" class="home-panel">
+          <div class="home-hero">
+            <div>
+              <p class="eyebrow">Your study hub</p>
+              <h2>Ready for a smarter revision session?</h2>
+              <p class="home-copy">Stay focused with guided next steps, quick actions, and progress highlights for today.</p>
+            </div>
+            <div class="home-actions">
+              <button id="home-start-study" class="secondary-btn">Start a session</button>
+              <button id="home-view-progress" class="secondary-btn">View progress</button>
+            </div>
+          </div>
+          <div class="home-grid">
+            <div class="home-card">
+              <strong>Next step</strong>
+              <p id="home-next-step">Choose a subject to begin.</p>
+            </div>
+            <div class="home-card">
+              <strong>Streak</strong>
+              <p id="home-streak">0 days</p>
+            </div>
+            <div class="home-card">
+              <strong>Completed</strong>
+              <p id="home-completed">0 cards learned</p>
+            </div>
+          </div>
+        </section>
+
+        <section id="subject-section" class="subject-section hidden">
+          <section class="subject-info">
+            <div class="subject-banner">
+              <div class="subject-icon" id="subject-icon">💻</div>
+              <div>
+                <h2 id="subject-title">Computer Science</h2>
+                <p id="subject-description">Learn key computer science concepts and practice quick review cards or questions.</p>
+              </div>
+            </div>
+            <div class="subject-meta">
+              <div class="meta-item">
+                <span>Topics</span>
+                <p id="subject-topics">Algorithms • Programming • Systems</p>
+              </div>
+              <div class="meta-item">
+                <span>Items</span>
+                <p id="subject-count">3 flashcards / 3 questions</p>
+              </div>
+            </div>
+            <div class="subject-roadmap" id="subject-roadmap"></div>
+            <div class="subject-tip" id="subject-tip">Tip: Use the search bar to find exact terms in cards and questions.</div>
+          </section>
+
+          <section class="content" id="content-area"></section>
+        </section>
+      </main>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
